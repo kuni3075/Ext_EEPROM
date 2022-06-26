@@ -1,0 +1,2 @@
+# Ext_EEPROM
+外部EEPROMを使用するためのArduinoライブラリ
