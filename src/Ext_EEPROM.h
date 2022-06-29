@@ -12,6 +12,7 @@
 
 /* floatのビット演算用に共用体を定義 */
 union TypeConvert {
+  int i;
   long l;
   float f;
   unsigned char c[4];
@@ -23,21 +24,21 @@ class Ext_EEPROM {
   Ext_EEPROM(int model);
   Ext_EEPROM(int model, int address);
   void begin();
-  void put(uint8_t address, uint8_t data);
-  uint8_t get(uint8_t address);
-  void write(uint8_t num, unsigned char *data);
-  void write(uint8_t num, int data);
-  void write(uint8_t num, long data);
-  void write(uint8_t num, float data);
-  void readChar(uint8_t num, unsigned char *data);
-  int read(uint8_t num);
-  long readLong(uint8_t num);
-  float readFloat(uint8_t num);
+  void write(int num, unsigned char *data);
+  void write(int num, int data);
+  void write(int num, long data);
+  void write(int num, float data);
+  void readChar(int num, unsigned char *data);
+  int read(int num);
+  long readLong(int num);
+  float readFloat(int num);
 
  private:
   uint8_t slave_address;
+  uint8_t mem_address_size;
 
   void setSlaveAddress(int model, int address);
+  void WireWriteAddress(int num);
 };
 
 #endif

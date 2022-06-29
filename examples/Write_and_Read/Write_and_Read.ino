@@ -1,14 +1,17 @@
 #include "Ext_EEPROM.h"
 
 /* データごとの保存番号を設定 */
-const uint8_t num_int = 0;
-const uint8_t num_long = 1;
-const uint8_t num_float = 2;
+const int num_int = 300;
+const int num_long = 301;
+const int num_float = 302;
 
 /* インスタンス生成 */
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24LC02B);
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
+// Ext_EEPROM eeprom = Ext_EEPROM(AT24FC128, 0);
+Ext_EEPROM eeprom = Ext_EEPROM(AT24FC256, 0);
+
 
 void setup() {
   Serial.begin(9600);

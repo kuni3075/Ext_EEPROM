@@ -3,12 +3,19 @@
 /* EEPROMの型式に応じてパラメータを設定 */
 Ext_EEPROM::Ext_EEPROM(int model) { Ext_EEPROM::setSlaveAddress(model, 0); }
 
-Ext_EEPROM::Ext_EEPROM(int model, int address) {Ext_EEPROM::setSlaveAddress(model, address);}
+Ext_EEPROM::Ext_EEPROM(int model, int address) {
+  Ext_EEPROM::setSlaveAddress(model, address);
+}
 
 void Ext_EEPROM::setSlaveAddress(int model, int address) {
   /* 型式によるプリプロセッサ条件分岐用 */
-  if (model == MC_24AA02 || model == MC_24LC02B || model == MC_24FC02 ||
-      model == AT24FC128 || model == AT24FC256) {
+  if (model == MC_24AA02 || model == MC_24LC02B || model == MC_24FC02) {
+    mem_address_size = 1;
+    slave_address = (uint8_t)(0b1010000 | address);
+  }
+
+  if (model == AT24FC128 || model == AT24FC256) {
+    mem_address_size = 2;
     slave_address = (uint8_t)(0b1010000 | address);
   }
 }
@@ -19,41 +26,24 @@ void Ext_EEPROM::begin() {
   Wire.begin();
 }
 
-/* ----------------------------------------------------- */
-
-/* 1byte書き込み */
-void Ext_EEPROM::put(uint8_t address, uint8_t data) {
-  /* 指定のメモリアドレスに書き込み */
-  Wire.beginTransmission(slave_address);
-  Wire.write(address);
-  Wire.write(data);
-  Wire.endTransmission();
-
-  delay(10);
-}
-
-/* 1byte読み出し */
-uint8_t Ext_EEPROM::get(uint8_t address) {
-  uint8_t data = 0;
-
-  /* 読みだすメモリアドレスを設定 */
-  Wire.beginTransmission(slave_address);
-  Wire.write(address);
-  Wire.endTransmission();
-
-  /* データの読み出し */
-  Wire.requestFrom(slave_address, 1);
-  data = Wire.read();
-  return data;
+void Ext_EEPROM::WireWriteAddress(int num) {
+  if (mem_address_size == 1) {
+    Wire.write(num * 4);
+  } else if (mem_address_size == 2) {
+    union TypeConvert add;
+    add.l = (long)(num * 4);
+    Wire.write(add.c[1]);
+    Wire.write(add.c[0]);
+  }
 }
 
 /* ----------------------------------------------------- */
 
 /* 4byte書き込み(char) */
-void Ext_EEPROM::write(uint8_t num, unsigned char *data) {
+void Ext_EEPROM::write(int num, unsigned char *data) {
   /* 指定のメモリアドレスに書き込み */
   Wire.beginTransmission(slave_address);
-  Wire.write(num * 4);
+  Ext_EEPROM::WireWriteAddress(num);
   Wire.write(data[0]);
   Wire.write(data[1]);
   Wire.write(data[2]);
@@ -64,21 +54,21 @@ void Ext_EEPROM::write(uint8_t num, unsigned char *data) {
 }
 
 /* 4byte書き込み(int) */
-void Ext_EEPROM::write(uint8_t num, int data) {
+void Ext_EEPROM::write(int num, int data) {
   union TypeConvert val;
   val.l = (long)(data);
   Ext_EEPROM::write(num, val.c);
 }
 
 /* 4byte書き込み(long) */
-void Ext_EEPROM::write(uint8_t num, long data) {
+void Ext_EEPROM::write(int num, long data) {
   union TypeConvert val;
   val.l = data;
   Ext_EEPROM::write(num, val.c);
 }
 
 /* 4byte書き込み(float) */
-void Ext_EEPROM::write(uint8_t num, float data) {
+void Ext_EEPROM::write(int num, float data) {
   union TypeConvert val;
   val.f = data;
   Ext_EEPROM::write(num, val.c);
@@ -87,10 +77,10 @@ void Ext_EEPROM::write(uint8_t num, float data) {
 /* ----------------------------------------------------- */
 
 /* 4byte読み出し(char) */
-void Ext_EEPROM::readChar(uint8_t num, unsigned char *data) {
+void Ext_EEPROM::readChar(int num, unsigned char *data) {
   /* 読みだすメモリアドレスを設定 */
   Wire.beginTransmission(slave_address);
-  Wire.write(num * 4);
+  Ext_EEPROM::WireWriteAddress(num);
   Wire.endTransmission();
 
   /* データを1byteずつ読み出し */
@@ -102,21 +92,21 @@ void Ext_EEPROM::readChar(uint8_t num, unsigned char *data) {
 }
 
 /* 4byte読み出し(int) */
-int Ext_EEPROM::read(uint8_t num) {
+int Ext_EEPROM::read(int num) {
   union TypeConvert val;
   Ext_EEPROM::readChar(num, val.c);
   return (int)(val.l);
 }
 
 /* 4byte読み出し(long) */
-long Ext_EEPROM::readLong(uint8_t num) {
+long Ext_EEPROM::readLong(int num) {
   union TypeConvert val;
   Ext_EEPROM::readChar(num, val.c);
   return val.l;
 }
 
 /* 4byte読み出し(float) */
-float Ext_EEPROM::readFloat(uint8_t num) {
+float Ext_EEPROM::readFloat(int num) {
   union TypeConvert val;
   Ext_EEPROM::readChar(num, val.c);
   return val.f;
