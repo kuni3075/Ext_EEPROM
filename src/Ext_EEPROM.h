@@ -7,6 +7,8 @@
 #define MC_24AA02 0
 #define MC_24LC02B 1
 #define MC_24FC02 2
+#define AT24FC128 3
+#define AT24FC256 4
 
 /* floatのビット演算用に共用体を定義 */
 union TypeConvert {
@@ -19,6 +21,7 @@ union TypeConvert {
 class Ext_EEPROM {
  public:
   Ext_EEPROM(int model);
+  Ext_EEPROM(int model, int address);
   void begin();
   void put(uint8_t address, uint8_t data);
   uint8_t get(uint8_t address);
@@ -33,6 +36,8 @@ class Ext_EEPROM {
 
  private:
   uint8_t slave_address;
+
+  void setSlaveAddress(int model, int address);
 };
 
 #endif

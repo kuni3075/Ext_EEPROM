@@ -1,20 +1,16 @@
 #include "Ext_EEPROM.h"
 
 /* EEPROMの型式に応じてパラメータを設定 */
-Ext_EEPROM::Ext_EEPROM(int model) {
-  /* 型式によるプリプロセッサ条件分岐用 */
-  if (model == MC_24AA02) {
-#define MC_24AA02_PROG
-  } else if (model == MC_24LC02B) {
-#define MC_24LC02B_PROG
-  } else if (model == MC_24FC02) {
-#define MC_24FC02_PROG
-  }
+Ext_EEPROM::Ext_EEPROM(int model) { Ext_EEPROM::setSlaveAddress(model, 0); }
 
-/* I2Cのスレーブアドレスを設定 */
-#ifdef MC_24AA02_PROG || MC_24LC02B_PROG || MC_24FC02_PROG
-  slave_address = (uint8_t)0b1010000;
-#endif
+Ext_EEPROM::Ext_EEPROM(int model, int address) {Ext_EEPROM::setSlaveAddress(model, address);}
+
+void Ext_EEPROM::setSlaveAddress(int model, int address) {
+  /* 型式によるプリプロセッサ条件分岐用 */
+  if (model == MC_24AA02 || model == MC_24LC02B || model == MC_24FC02 ||
+      model == AT24FC128 || model == AT24FC256) {
+    slave_address = (uint8_t)(0b1010000 | address);
+  }
 }
 
 /* 初期化処理 */

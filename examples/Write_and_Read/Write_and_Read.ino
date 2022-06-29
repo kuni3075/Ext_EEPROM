@@ -6,7 +6,9 @@ const uint8_t num_long = 1;
 const uint8_t num_float = 2;
 
 /* インスタンス生成 */
-Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
+// Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
+// Ext_EEPROM eeprom = Ext_EEPROM(MC_24LC02B);
+// Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
 
 void setup() {
   Serial.begin(9600);
