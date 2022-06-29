@@ -1,7 +1,7 @@
 # External EEPROM Library
 
 外部 EEPROM を使用するための Arduino ライブラリです。
-当方で動作確認が出来なものを順次追加していきます。
+当方で動作確認が出来たものを順次追加していきます。
 
 ## 対応している EEPROM
 
