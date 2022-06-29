@@ -15,6 +15,7 @@ union TypeConvert {
   unsigned char c[4];
 };
 
+/* クラスの定義 */
 class Ext_EEPROM {
  public:
   Ext_EEPROM(int model);
