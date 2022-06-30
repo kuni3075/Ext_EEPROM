@@ -10,7 +10,7 @@ const int num_float = 302;
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24LC02B);
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
 // Ext_EEPROM eeprom = Ext_EEPROM(AT24FC128, 0);
-Ext_EEPROM eeprom = Ext_EEPROM(AT24FC256, 0);
+// Ext_EEPROM eeprom = Ext_EEPROM(AT24FC256, 0);
 
 
 void setup() {
