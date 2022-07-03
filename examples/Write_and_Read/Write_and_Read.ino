@@ -6,7 +6,7 @@ const int num_long = 301;
 const int num_float = 302;
 
 /* インスタンス生成 */
-// Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
+// Ext_EEPROM eeprom = Ext_EEPROM(MC_24AA02);
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24LC02B);
 // Ext_EEPROM eeprom = Ext_EEPROM(MC_24FC02);
 // Ext_EEPROM eeprom = Ext_EEPROM(AT24FC128, 0);
